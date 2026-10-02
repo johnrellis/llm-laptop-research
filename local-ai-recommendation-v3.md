@@ -9,6 +9,11 @@
 > - **Peer-review and grant-assessment material:** check the publisher's or funder's rules first. Many restrict AI even offline.
 > - **Nothing is signed off** until it passes a test on real, non-confidential papers.
 
+
+## The Apple Question
+
+After reading this doc, jump over to: [The Apple Question Addendum](local-ai-recommendation-addendum-apple.md) 
+
 ---
 
 ## Contents
@@ -293,6 +298,8 @@ Run the same papers through the institutional cloud service, if available, as a 
 
 > **TL;DR:** IT sign-off, an encrypted disk, no cloud sync of documents, individual login, controlled updates, and a data-protection assessment if personal data is involved.
 
+The below seems a bit extreme but I'll leave it in for consideration.
+
 | Area | Requirement |
 |---|---|
 | Approval | IT security sign-off; a data-protection impact assessment (DPIA) if personal data will be processed |
@@ -344,6 +351,12 @@ These are mini PCs about the size of a hardback book. A technical colleague conf
 <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/dgx-spark/DGX-Spark-og.jpg" alt="NVIDIA DGX Spark" width="360"> <img src="https://de.gmktec.com/cdn/shop/files/evo-x2_818c7b88-775c-4c0b-bf0e-d074caf8dc49.png?v=1783577020" alt="GMKtec EVO-X2" width="260">
 
 **Worth considering if:** portability is not needed, the existing laptop is staying, and a technical colleague is willing to maintain a small Linux machine.
+
+---
+
+## The Forbidden Fruit
+
+After reading this doc, jump over to: [The Apple Question Addendum](local-ai-recommendation-addendum-apple.md) 
 
 ---
 
