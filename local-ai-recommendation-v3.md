@@ -9,7 +9,6 @@
 > - **Peer-review and grant-assessment material:** check the publisher's or funder's rules first. Many restrict AI even offline.
 > - **Nothing is signed off** until it passes a test on real, non-confidential papers.
 
-
 ## The Apple Question
 
 After reading this doc, jump over to: [The Apple Question Addendum](local-ai-recommendation-addendum-apple.md) 
@@ -227,7 +226,7 @@ AI tools, local and cloud, sometimes state things that are not in the paper. **C
 
 ## 8. Concepts behind the choice
 
-> **TL;DR:** Memory size decides **which** models fit. Memory speed decides **how fast** answers appear. Compression and "mixture of experts" designs let large models fit and run on a laptop.
+> **TL;DR:** Memory size decides **which** models fit. Memory speed decides **how fast** answers appear. Compression and "mixture of experts" designs let large models fit and run on a laptop. For summarising papers, the **wait before the first word** matters more than how fast the answer types out.
 
 | Concept | Analogy | What it means here |
 |---|---|---|
@@ -238,6 +237,25 @@ AI tools, local and cloud, sometimes state things that are not in the paper. **C
 | **Mixture of experts (MoE)** | A large faculty where only the relevant specialists answer each question | The whole model is stored, but only a small part is used per word, so it runs fast for its size |
 
 **Windows and AI memory on AMD laptops:** on a 128GB Ryzen AI Max+ system, Windows can dedicate up to **96GB** to the graphics unit ([AMD](https://www.amd.com/en/blogs/2025/experience-unparalleled-performance-with-the-amd-ryzen.html)). Linux can expose more ([AMD ROCm docs](https://rocm.docs.amd.com/en/docs-7.2.0/how-to/system-optimization/strixhalo.html)). The recommended models fit within 96GB when loaded one at a time, so **Windows is fine** for this use case.
+
+### Two speeds: typing speed and waiting time
+
+AI speed is usually quoted in **tokens per second** (a token is roughly three-quarters of a word). For this use case, two different speeds matter:
+
+| Speed | What you experience | Why it matters here |
+|---|---|---|
+| **Generation speed** (tokens per second) | How fast the answer types out | Average silent reading is about 238 words per minute ([Brysbaert, 2019](https://doi.org/10.1016/j.jml.2019.104047)), or roughly 5 tokens per second. Anything above about 15 tokens per second already outpaces reading |
+| **Time to first word** | The wait before anything appears | **The real bottleneck.** A paper is a long input (about 10,000–15,000 tokens) that must be read before the answer starts |
+
+**Illustrative waiting time for a 15,000-token paper** (arithmetic, not benchmarks):
+
+| Reading-in speed | Wait before the summary starts |
+|---|---|
+| 300 tokens/s | ~50 seconds |
+| 1,000 tokens/s | ~15 seconds |
+| 3,000 tokens/s | ~5 seconds |
+
+Verified figures for this waiting time are not available for these machines and models, which is why the [acceptance test](#10-acceptance-test) measures it.
 
 ---
 
@@ -267,9 +285,12 @@ A PDF contains text, images and drawn graphics, so it is handled in stages:
 
 | Model | Approx. size (4-bit) | Reads figures? | Fits 64GB laptop? | Fits 128GB laptop? |
 |---|---|---|---|---|
-| [Gemma 4](https://ai.google.dev/gemma/docs/core/model_card_4) 26B / 31B | ~19–20GB | ✅ Yes | ✅ | ✅ |
+| [Gemma 4](https://ai.google.dev/gemma/docs/core/model_card_4) 26B MoE (preferred) | ~16–18GB (est.) | ✅ Yes | ✅ | ✅ |
+| [Gemma 4](https://ai.google.dev/gemma/docs/core/model_card_4) 31B dense | ~19–20GB | ✅ Yes | ✅ | ✅ |
 | [Qwen3.5-35B-A3B](https://huggingface.co/Qwen/Qwen3.5-35B-A3B) | ~20–24GB | ✅ Yes (verify version) | ✅ | ✅ |
 | [gpt-oss-120b](https://openai.com/index/introducing-gpt-oss/) | ~63GB | ❌ Text only | ❌ | ✅ |
+
+**Prefer the 26B MoE over the 31B dense on the AMD laptops.** The dense model reads all its weights for every word, so on these laptops it is estimated at only about 10–12 tokens per second, close to reading speed. The MoE version reads only its active part and is estimated at roughly 6–8 times faster. For comparison, a similar MoE model (Qwen3 30B-A3B) measured about 86 tokens per second on this chip, and gpt-oss-120b about 53 tokens per second (both on Linux; Windows may differ).
 
 Cloud models are generally stronger on hard reasoning and on reading figures, but the gap varies by task. The acceptance test provides the evidence.
 
@@ -277,7 +298,7 @@ Cloud models are generally stronger on hard reasoning and on reading figures, bu
 
 ## 10. Acceptance test
 
-> **TL;DR:** Before sign-off, run eight types of non-confidential paper through each candidate model and check the numbers, tables, figures and page references.
+> **TL;DR:** Before sign-off, run eight types of non-confidential paper through each candidate model and check the numbers, tables, figures, page references and speed.
 
 **Test papers:** single-column, two-column, scanned, figure-heavy, table-heavy, mathematics-heavy, colour-coded figures, and long (30–50 pages).
 
@@ -287,8 +308,15 @@ Cloud models are generally stronger on hard reasoning and on reading figures, bu
 | Table accuracy | Extracted values compared with the original |
 | Figure accuracy | Claims about figures checked by a subject expert |
 | Page references | Cited pages correct? |
-| Speed | Time to first word, total time |
+| Speed | Time to first word, generation speed (tokens per second), total time |
 | Reliability | Memory use and failures logged |
+
+**Suggested speed thresholds** (proposed for this project, not an established standard):
+
+| Measure | Pass |
+|---|---|
+| Time to first word, typical paper (10–20 pages) | Under 60 seconds |
+| Generation speed | At least 15 tokens per second |
 
 Run the same papers through the institutional cloud service, if available, as a quality baseline.
 
@@ -297,8 +325,6 @@ Run the same papers through the institutional cloud service, if available, as a 
 ## 11. Security and governance
 
 > **TL;DR:** IT sign-off, an encrypted disk, no cloud sync of documents, individual login, controlled updates, and a data-protection assessment if personal data is involved.
-
-The below seems a bit extreme but I'll leave it in for consideration.
 
 | Area | Requirement |
 |---|---|
@@ -354,12 +380,6 @@ These are mini PCs about the size of a hardback book. A technical colleague conf
 
 ---
 
-## The Forbidden Fruit
-
-After reading this doc, jump over to: [The Apple Question Addendum](local-ai-recommendation-addendum-apple.md) 
-
----
-
 ## 14. Glossary
 
 > **TL;DR:** The handful of terms used in this document, in plain language.
@@ -373,6 +393,10 @@ After reading this doc, jump over to: [The Apple Question Addendum](local-ai-rec
 | **Unified memory** | Memory shared by the processor and graphics, letting large models fit on a laptop |
 | **Multimodal** | Able to read images (e.g. figures) as well as text |
 | **Open-weight model** | A model whose files are published and can run on your own device |
+
+## The Forbidden Fruit
+
+After reading this doc, jump over to: [The Apple Question Addendum](local-ai-recommendation-addendum-apple.md) 
 
 ---
 
@@ -412,6 +436,7 @@ After reading this doc, jump over to: [The Apple Question Addendum](local-ai-rec
 
 - Liu et al., ["Lost in the Middle: How Language Models Use Long Contexts"](https://direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00638/119630/), *TACL* (2024)
 - Dettmers & Zettlemoyer, ["The case for 4-bit precision: k-bit Inference Scaling Laws"](https://proceedings.mlr.press/v202/dettmers23a.html), *ICML* (2023)
+- Brysbaert, ["How many words do we read per minute? A review and meta-analysis of reading rate"](https://doi.org/10.1016/j.jml.2019.104047), *Journal of Memory and Language* (2019)
 
 ---
 

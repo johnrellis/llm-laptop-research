@@ -181,7 +181,15 @@ The AI can use about **75%** of a Mac's memory by default (adjustable by the tec
 | 96GB | ~72GB | ✅ | ✅ | ✅ |
 | 128GB | ~96GB | ✅ | ✅ | ✅ |
 
-**Speed (approximate):** at the same memory size, an M5 Max produces answers about twice as fast as an M5 Pro, and roughly 2–2.4× as fast as the AMD laptops in the main document. This estimate is based on memory bandwidth, not on benchmarks.
+**Generation speed (tokens per second):** anything above about 15 tokens per second outpaces reading. The wait before the first word matters more for papers (see the main document, [section 8](local-ai-recommendation-v3.md#two-speeds-typing-speed-and-waiting-time)).
+
+| Model | AMD laptop (main document) | M5 Pro (Mac mini / MacBook Pro) | M5 Max (Mac Studio) |
+|---|---|---|---|
+| MoE, ~3–4B active (Qwen3.5-35B-A3B, Gemma 4 26B) | ~86 (measured, Linux) | ~90–100 (est.) | ~150–200 (est.) |
+| Dense ~31B (Gemma 4 31B) | ~10–12 (est.) | ~12–14 (est.) | ~25–30 (est.) |
+| gpt-oss-120b | ~53 (measured, Linux) | Does not fit in 64GB | Does not fit in 64GB |
+
+Estimates scale from memory bandwidth (bandwidth ÷ data read per word) and are not benchmarks (low–moderate confidence). The M5 chips are also expected to reduce the wait before the first word, because their GPU cores include AI accelerators; this should be confirmed in the acceptance test.
 
 ---
 
