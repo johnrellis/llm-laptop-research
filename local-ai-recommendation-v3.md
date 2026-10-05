@@ -9,6 +9,10 @@
 > - **Peer-review and grant-assessment material:** check the publisher's or funder's rules first. Many restrict AI even offline.
 > - **Nothing is signed off** until it passes a test on real, non-confidential papers.
 
+## The Apple Question
+
+After reading this doc, jump over to: [The Apple Question Addendum](local-ai-recommendation-addendum-apple.md) 
+
 ---
 
 ## Contents
@@ -389,6 +393,10 @@ These are mini PCs about the size of a hardback book. A technical colleague conf
 | **Unified memory** | Memory shared by the processor and graphics, letting large models fit on a laptop |
 | **Multimodal** | Able to read images (e.g. figures) as well as text |
 | **Open-weight model** | A model whose files are published and can run on your own device |
+
+## The Forbidden Fruit
+
+After reading this doc, jump over to: [The Apple Question Addendum](local-ai-recommendation-addendum-apple.md) 
 
 ---
 

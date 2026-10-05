@@ -236,6 +236,8 @@ Compared with the main document's options:
 
 > **TL;DR:** An M3 Max MacBook Pro with 64GB (400GB/s) closely approximates the 64GB options, so run the acceptance test on it first and decide with evidence.
 
+The M3 Max is John's work laptop, so he can be the test subject.
+
 | Test machine | Comparable to | Difference |
 |---|---|---|
 | M3 Max, 64GB, 400GB/s | Mac mini M5 Pro 64GB (307GB/s) | The M3 Max answers somewhat faster; the M5 Pro reads long documents faster |
